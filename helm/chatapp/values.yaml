@@ -1,0 +1,55 @@
+namespace: chat-app
+
+backend:
+  image:
+    repository: jyoti2510/chatapp-backend
+    tag: latest
+    pullPolicy: IfNotPresent
+  replicaCount: 1
+  port: 5001
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 256Mi
+
+
+frontend:
+  image:
+    repository: jyoti2510/chatapp-frontend
+    tag: latest
+    pullPolicy: IfNotPresent
+  replicaCount: 1
+  port: 80
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 250m
+      memory: 128Mi
+
+mongodb:
+  image:
+    repository: mongo
+    tag: "7.0"
+    pullPolicy: IfNotPresent
+  port: 27017
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+  persistence:
+    enabled: true
+    size: 5Gi
+  auth:
+    username: mongoadmin
+    password: CHANGE_ME_placeholder
+
+secrets:
+  jwtSecret: CHANGE_ME_placeholder

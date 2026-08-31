@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: frontend
+    namespace: {{ .Values.namespace }}
+    labels:
+        app: frontend
+spec:
+    replicas: {{ .Values.frontend.replicaCount }}
+    selector:
+        matchLabels:
+            app: frontend
+    template:
+        metadata:
+            labels:
+                app: frontend
+        spec:
+            containers:
+                - name: chatapp-frontend
+                  image: "{{ .Values.frontend.image.repository }}:{{ .Values.frontend.image.tag }}"
+                  imagePullPolicy: {{ .Values.frontend.image.pullPolicy }}
+                  ports:
+                    - containerPort: 8080 
+                  resources:
+                    {{- toYaml .Values.frontend.resources | nindent 20}}
+                  readinessProbe:
+                    httpGet:
+                        path: /
+                        port: 8080
+                    initialDelaySeconds: 5
+                    periodSeconds: 10
+                  livenessProbe:
+                    httpGet:
+                        path: /
+                        port: 8080
+                    initialDelaySeconds: 15
+                    periodSeconds: 20 
+
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+    name: frontend
+    namespace: {{ .Values.namespace }}
+spec:
+    selector:
+        app: frontend
+    ports:
+        - port: {{ .Values.frontend.port }}
+          targetPort: 8080

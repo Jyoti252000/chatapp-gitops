@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+    name: mongodb
+    namespace: {{ .Values.namespace }}
+    labels:
+        app: mongodb
+spec:
+    serviceName: mongodb
+    replicas: 1
+    selector:
+        matchLabels:
+            app: mongodb
+    template:
+        metadata:
+            labels:
+                app: mongodb
+        spec:
+            containers:
+                - name: chatapp-mongodb
+                  image: "{{ .Values.mongodb.image.repository }}:{{ .Values.mongodb.image.tag }}"
+                  imagePullPolicy: {{ .Values.mongodb.image.pullPolicy }}
+                  ports:
+                    - containerPort: {{ .Values.mongodb.port }}
+                  env:
+                    - name: MONGO_INITDB_ROOT_USERNAME
+                      valueFrom:
+                        secretKeyRef:
+                            name: mongodb-secrets
+                            key: username 
+                    - name: MONGO_INITDB_ROOT_PASSWORD
+                      valueFrom:
+                        secretKeyRef:
+                            name: mongodb-secrets
+                            key: password  
+                  resources:
+                    {{- toYaml .Values.mongodb.resources | nindent 20 }}
+                  readinessProbe:
+                    exec:
+                        command: ["mongosh", "--quiet", "--eval", "db.adminCommand('ping')"]
+                    initialDelaySeconds: 10
+                    periodSeconds: 10
+                    timeoutSeconds: 5
+                  livenessProbe:
+                    exec: 
+                        command: ["mongosh", "--quiet", "--eval", "db.adminCommand('ping')"]
+                    initialDelaySeconds: 20
+                    periodSeconds: 20
+                    timeoutSeconds: 5
+                  volumeMounts:
+                    - name: mongodb-storage
+                      mountPath: /data/db
+    volumeClaimTemplates:
+        - metadata: 
+            name: mongodb-storage
+          spec:
+            accessModes: ["ReadWriteOnce"]
+            resources:
+                requests:
+                    storage: {{ .Values.mongodb.persistence.size }}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+    name: mongodb
+    namespace: {{ .Values.namespace }}
+spec:
+    clusterIP: None
+    selector:
+        app: mongodb
+    ports:
+        - port: {{ .Values.mongodb.port }}
+          targetPort: {{ .Values.mongodb.port }}
+
+                
