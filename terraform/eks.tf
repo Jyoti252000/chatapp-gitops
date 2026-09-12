@@ -67,9 +67,7 @@ resource "aws_iam_role_policy_attachment" "eks_ecr_readonly" {
 # ==============================================================================
 # 3. WORKER NODE GROUPS(The Server Muscle)
 # --- The worker nodes themselves ---
-# Deliberately small for a portfolio project: 2 nodes, t3.medium.
-# Roughly $0.03-0.05/hr per node (region-dependent) on top of the ~$0.10/hr
-# control plane cost and the NAT Gateway — see cost discussion in chat.
+
 resource "aws_eks_node_group" "main" {
   cluster_name    = aws_eks_cluster.main.name
   node_group_name = "${var.cluster_name}-nodes"
