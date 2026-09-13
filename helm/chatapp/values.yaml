@@ -2,8 +2,8 @@ namespace: chat-app
 
 backend:
   image:
-    repository: jyoti2510/chatapp-backend
-    tag: latest
+    repository: 693517970741.dkr.ecr.eu-west-1.amazonaws.com/chatapp-backend
+    tag: 626178da51ea76fb6a5fbef5e7f564e831d86c7e
     pullPolicy: IfNotPresent
   replicaCount: 1
   port: 5001
@@ -18,8 +18,8 @@ backend:
 
 frontend:
   image:
-    repository: jyoti2510/chatapp-frontend
-    tag: latest
+    repository: 693517970741.dkr.ecr.eu-west-1.amazonaws.com/chatapp-frontend
+    tag: 626178da51ea76fb6a5fbef5e7f564e831d86c7e
     pullPolicy: IfNotPresent
   replicaCount: 1
   port: 80
