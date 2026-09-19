@@ -15,6 +15,9 @@ spec:
             labels:
                 app: backend
         spec:
+            securityContext:
+              runAsNonRoot: true
+              runAsUser: 100
             containers:
                 - name: chatapp-backend
                   image: "{{ .Values.backend.image.repository }}:{{ .Values.backend.image.tag }}"
@@ -57,6 +60,7 @@ spec:
                         port: {{ .Values.backend.port }}
                     initialDelaySeconds: 15
                     periodSeconds: 20
+              
 ---
 apiVersion: v1
 kind: Service

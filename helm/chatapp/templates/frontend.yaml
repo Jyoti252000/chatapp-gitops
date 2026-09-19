@@ -15,6 +15,9 @@ spec:
             labels:
                 app: frontend
         spec:
+            securityContext:
+                runAsNonRoot: true
+                runAsUser: 101
             containers:
                 - name: chatapp-frontend
                   image: "{{ .Values.frontend.image.repository }}:{{ .Values.frontend.image.tag }}"

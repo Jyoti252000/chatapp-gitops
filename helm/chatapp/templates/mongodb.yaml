@@ -16,7 +16,7 @@ spec:
             labels:
                 app: mongodb
         spec:
-            containers:
+          containers:
                 - name: chatapp-mongodb
                   image: "{{ .Values.mongodb.image.repository }}:{{ .Values.mongodb.image.tag }}"
                   imagePullPolicy: {{ .Values.mongodb.image.pullPolicy }}
