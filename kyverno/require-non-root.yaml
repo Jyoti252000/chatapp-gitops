@@ -21,6 +21,7 @@ spec:
               - kube-public
               - local-path-storage
               - kyverno
+              - external-secrets 
         - resources:
             kinds:
               - Pod
